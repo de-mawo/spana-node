@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+model User {
+  id            String     @id @default(cuid())
+  name          String?
+  email         String?    @unique
+  emailVerified DateTime?
+  image         String?
+  role          Role       @default(USER)
+  phone         String?
+  title         String?
+  manager       String?
+  department    String?
+  balances      Balances[]
+}
+
+model LeaveType {
+  id          String   @id @default(cuid())
+  title       String
+  values      String[] @default(["Credit", "Used", "Available"])
+  category    String // Should be a lower case of the title 
+  description String?
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  INMODERATION
+  REJECTED
+}
+
+model Leave {
+  id            String      @id @default(cuid())
+  type          String
+  year String @default("")
+  startDate     DateTime
+  endDate       DateTime
+  days          Int
+  userName      String
+  userNote      String?
+  tasksLink     String?
+  userEmail     String
+  status        LeaveStatus @default(PENDING)
+  moderator     String?      
+  moderatorNote String?     
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Balances {
+  id                 String @id @default(cuid())
+  year               String
+  annualCredit       Int?   @default(0)
+  annualUsed         Int?   @default(0)
+  annualAvailable    Int?   @default(0)
+  healthCredit       Int?   @default(0)
+  healthUsed         Int?   @default(0)
+  healthAvailable    Int?   @default(0)
+  studyCredit        Int?   @default(0)
+  studyUsed          Int?   @default(0)
+  studyAvailable     Int?   @default(0)
+  maternityCredit    Int?   @default(0)
+  maternityUsed      Int?   @default(0)
+  maternityAvailable Int?   @default(0)
+  familyCredit       Int?   @default(0)
+  familyUsed         Int?   @default(0)
+  familyAvailable    Int?   @default(0)
+  paternityCredit    Int?   @default(0)
+  paternityUsed      Int?   @default(0)
+  paternityAvailable Int?   @default(0)
+  unpaidUsed         Int?   @default(0)
+  name               String
+  email              String
+  user               User   @relation(fields: [email], references: [email], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Events {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  startDate   DateTime
+  endDate     DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
