@@ -9,7 +9,11 @@
     "strict": true,
     "strictPropertyInitialization": false,
     "skipLibCheck": true,
-    "outDir": "./build",
-    "rootDir": "."
-  }
+    "sourceMap": true,
+    "removeComments": true,
+    "outDir": "./dist",
+    "baseUrl": "."
+  },
+  "exclude": ["node_modules"],
+  "include": [ "./src/**/*.ts"]
 }
