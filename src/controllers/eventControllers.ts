@@ -3,13 +3,11 @@ import prisma from "../utils/prisma";
 import { EventReqType } from "../../types";
 
 export const getAllEvents = async (req: Request, res: Response) => {
-  console.log(req);
-
   try {
     const events = await prisma.events.findMany({});
     return res.status(200).json({
       message: "success",
-      data: { data: events },
+      data: { events },
     });
   } catch (error) {
     console.error(error);
