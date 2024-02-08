@@ -51,7 +51,7 @@ passport.use(
       try {
         const userExist = await prisma.user.findUnique({
           where: {
-            email,
+            googleId: profile.id,
           },
         });
 

@@ -1,22 +1,15 @@
+import RedisStore from "connect-redis";
 import { createClient } from "redis";
 
-const redisUrl = "redis://localhost:6379";
 
-const redisClient = createClient({
-  url: redisUrl,
+// Initialize client.
+let redisClient = createClient({url: process.env.REDIS_URL});
+redisClient.connect().catch(console.error);
+
+// Initialize store.
+let redisStore = new RedisStore({
+  client: redisClient,
+  prefix: "Spana App:",
 });
 
-const connectRedis = async () => {
-  try {
-    await redisClient.connect();
-    console.log("Redis client connect successfully");
-    redisClient.set("try", "Spana Node App");
-  } catch (error) {
-    console.log(error);
-    setTimeout(connectRedis, 5000);
-  }
-};
-
-connectRedis();
-
-export default redisClient;
+export default redisStore;
