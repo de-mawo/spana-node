@@ -1,6 +1,13 @@
 import express from "express";
 import passport from "passport";
 
+type User = {
+  name: string;
+  email: string;
+  role: string;
+  image: string;
+};
+
 const router = express.Router();
 
 // login
@@ -17,26 +24,47 @@ router.get("/logout", (req, res) => {
 router.get(
   "/google",
   passport.authenticate("google", {
-    scope: ["profile"],
+    scope: ["profile", "email"],
   })
 );
 
 router.get(
   "/google/callback",
-  passport.authenticate("google"),
+  passport.authenticate("google",{session: true}),
   (req, res, next) => {
-    if (!req.user) {
-      // Handle case where user is not authenticated
-      return res.status(401).send("User not authenticated");
-    }
-
-    req.logIn(req.user, function (err) {
-      if (err) {
-        return next(err);
-      }
-      res.redirect(`http://localhost:3000/dashboard`)
-    });
+   
+      res.redirect(`http://localhost:3000/dashboard`);
+   
   }
 );
+
+router.get("/session", (req, res) => {
+
+  console.log(req.headers);
+  
+  try {
+    if (req.user) {
+      res.send({
+        success: true,
+        user: req.user,
+      });
+     
+   
+      
+    } else {
+      // Handle the case where req.user is undefined
+      res.status(404).json({ error: "User not found" });
+    }
+  } catch (error) {
+
+   
+    
+    console.error("An error occurred:", error);
+    console.log(error);
+    
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 export default router;
