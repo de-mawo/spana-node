@@ -2,9 +2,12 @@ import { Request, Response } from "express";
 import prisma from "../utils/prisma";
 import { EventReqType } from "../../types";
 
-export const getAllEvents = async (req: Request, res: Response) => {
 
-  console.log(req.cookies);
+
+
+
+export const getAllEvents = async (req: Request, res: Response) => {
+ 
   
   try {
     const events = await prisma.events.findMany({});

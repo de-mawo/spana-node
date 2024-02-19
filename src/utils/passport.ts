@@ -30,8 +30,6 @@ passport.use(
       //   passReqToCallback: true,
     },
     async function (accessToken, refreshToken, profile, done) {
-
-      console.log(profile);
       
       const email = extractEmail(profile) as string;
       const image = extractImage(profile);
