@@ -16,10 +16,9 @@ router.get("/login", (req, res) => {
 });
 
 // logout
-router.get("/logout", (req, res) => {
-
-  
-  //
+router.get("/logout", (req, res, done) => {
+  req.logout(done);
+  res.redirect(process.env.CLIENT_URL as string);
 });
 
 //Google auth
@@ -34,17 +33,16 @@ router.get(
   "/google/callback",
   passport.authenticate("google", { session: true }),
   (req, res, next) => {
-    res.redirect(`http://localhost:3000/dashboard`);
+    res.redirect(process.env.CLIENT_URL as string);
   }
 );
 
 router.get("/session", (req, res) => {
   try {
     if (req.user) {
-      res.send({
-        success: true,
-        user: req.user,
-      });
+      const { name, email, image, role } = req.user as User; // Do not send the id in a production app 
+      const user = { name, email, image, role };
+      res.send(user);
     } else {
       // Handle the case where req.user is undefined
       res.status(404).json({ error: "User not found" });
