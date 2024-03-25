@@ -1,10 +1,10 @@
 import express from "express";
 import { isAdmin } from "../utils/isAuth";
-import { createBalance, editBalance } from "../controllers/balanceController";
+import { createBalance, editBalance, getAllBalances } from "../controllers/balanceController";
 
 const router = express.Router();
 
-router.route("/").post(isAdmin, createBalance);
+router.route("/").get(isAdmin, getAllBalances).post(isAdmin, createBalance);
 
 router
 .route('/:id')

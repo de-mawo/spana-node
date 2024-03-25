@@ -1,6 +1,7 @@
 import { NextFunction, Response, Request } from "express";
-import { CreateCreditsType, EditBalanceType } from "types";
+import { CreateCreditsType, EditBalanceType } from "../../types";
 import prisma from "../utils/prisma";
+import { User } from "@prisma/client";
 
 export async function createBalance(
   req: Request,
@@ -75,5 +76,47 @@ export async function editBalance(
   } catch (error) {
     console.error(error);
     return res.json({ error: "Internal server error" }).status(500);
+  }
+}
+
+export async function getUserBalances(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const user = req.user as User; 
+    const email = user.email as string;
+
+    const year = new Date().getFullYear().toString(); // This needs to be dynamic
+
+    const userBalances = await prisma.balances.findFirst({
+      where: {
+        email,
+        year,
+      },
+    });
+
+    return res.status(200).json(userBalances);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+export async function getAllBalances(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const allBalances = await prisma.balances.findMany({
+      orderBy: [{ year: "desc" }],
+    });
+
+    return res.status(200).json(allBalances);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 }

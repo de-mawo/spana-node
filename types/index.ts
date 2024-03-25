@@ -1,4 +1,4 @@
-import { LeaveStatus } from "@prisma/client";
+import { LeaveStatus, Role } from "@prisma/client";
 
 export type EventReqType = {
   title: string;
@@ -48,3 +48,14 @@ export type EditLeaveType = {
   user: string;
   startDate: string;
 };
+
+
+// User Types
+
+export type EditUserTypes = {
+  phone: string;
+  department: string;
+  id: string;
+  title: string;
+  role: Role;
+}

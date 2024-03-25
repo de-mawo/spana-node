@@ -1,4 +1,4 @@
-require('dotenv').config() // Add this otherwise .env variables wont read
+require("dotenv").config(); // Add this otherwise .env variables wont read
 import express from "express";
 import morgan from "morgan";
 import authRoutes from "./routes/auth";
@@ -8,8 +8,10 @@ import session from "express-session";
 import cors from "cors";
 import { __prod__ } from "./utils/constants";
 // Import Routes
+import userRouter from "./routes/user";
+import leaveRouter from "./routes/leave";
+import balanceRouter from "./routes/balance";
 import eventsRouter from "./routes/event";
-import balanceRouter from "./routes/balance"
 
 const app = express();
 const port = process.env.PORT;
@@ -28,8 +30,6 @@ app.use(
   })
 );
 
-
-
 // Initialize session storage.
 app.use(
   session({
@@ -47,15 +47,15 @@ app.use(
   })
 );
 
-app.use(passport.initialize());  // init passport on every route call.
-app.use(passport.session())  // allow passport to use "express-session".
-
-
+app.use(passport.initialize()); // init passport on every route call.
+app.use(passport.session()); // allow passport to use "express-session".
 
 // ROUTES
 app.use("/auth", authRoutes);
-app.use("/api/v1/events", eventsRouter);
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/leave", leaveRouter);
 app.use("/api/v1/balance", balanceRouter);
+app.use("/api/v1/events", eventsRouter);
 
 app.listen(port, () => {
   console.log(`Server listening to port ${port}`);
