@@ -10,6 +10,6 @@ const router = express.Router();
 
 router.route("/").get(isAdmin, getAllUsers);
 router.route("/admin-edit-user").patch(isAdmin, editUser);
-router.route("/:email").patch(isUser, getUserInfo);
+router.route("/:email").get(isUser, getUserInfo);
 
 export default router;
