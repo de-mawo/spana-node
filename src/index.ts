@@ -1,13 +1,13 @@
 require("dotenv").config(); // Add this otherwise .env variables wont read
 import express from "express";
+import session from "express-session";
 import morgan from "morgan";
-import authRoutes from "./routes/auth";
+import cors from "cors";
 import passport from "./utils/passport";
 import redisStore from "./utils/redis";
-import session from "express-session";
-import cors from "cors";
-import { __prod__ } from "./utils/constants";
+import { __prod__, COOKIE_NAME } from "./utils/constants";
 // Import Routes
+import authRoutes from "./routes/auth";
 import userRouter from "./routes/user";
 import leaveRouter from "./routes/leave";
 import balanceRouter from "./routes/balance";
@@ -32,7 +32,7 @@ app.use(
 // Initialize session storage.
 app.use(
   session({
-    name: "spana_node_sess",
+    name: COOKIE_NAME,
     store: redisStore,
     resave: false, // required: force lightweight session keep alive (touch)
     saveUninitialized: false, // recommended: only save session when data exists
@@ -51,6 +51,12 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(passport.initialize()); // init passport on every route call.
 app.use(passport.session()); // allow passport to use "express-session".
+
+// app.use("*", (req, res, next) => {
+//   console.log(req.headers);
+//   next()
+  
+// })
 
 // ROUTES
 app.use("/auth", authRoutes);
