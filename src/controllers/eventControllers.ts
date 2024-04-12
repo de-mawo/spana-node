@@ -7,12 +7,10 @@ export const getAllEvents = async (
   res: Response,
   next: NextFunction
 ) => {
+  
   try {
     const events = await prisma.events.findMany({});
-    return res.status(200).json({
-      message: "success",
-      data: { events },
-    });
+    return res.status(200).json(events);
   } catch (error) {
     console.error(error);
     return res.status(500).json({

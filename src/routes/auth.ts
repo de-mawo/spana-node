@@ -48,28 +48,17 @@ router.get("/session", (req, res, next) => {
 
 // logout
 router.delete("/logout", (req, res, next) => {
-  // console.log("LOGGOUT ROUTE",req);
-  // req.logout(function(err) {
-  //   if (err) { return next(err); }
-  //   res.clearCookie(COOKIE_NAME);
-  //     res.status(200).send({ success: true });
-  // });
-  console.log(req.session);
-  
   req.session.destroy((err) => {
-  if (err) {
-    console.log(err);
-    res
-      .status(500)
-      .send({ success: false, error: "An error occurred during logout" });
-    return;
-  }
-
-  res.clearCookie(COOKIE_NAME);
-  res.status(200).send({ success: true });
-});
+    if (err) {
+      console.log(err);
+      res
+        .status(500)
+        .send({ success: false, error: "An error occurred during logout" });
+      return;
+    }
+    res.clearCookie(COOKIE_NAME);
+    res.status(200).send({ success: true });
+  });
 });
 
 export default router;
-
-

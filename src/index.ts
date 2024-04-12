@@ -37,6 +37,7 @@ app.use(
     resave: false, // required: force lightweight session keep alive (touch)
     saveUninitialized: false, // recommended: only save session when data exists
     secret: process.env.SESSION_SECRET as string,
+    unset: 'destroy',
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 30, //30 Days
       httpOnly: true,
